@@ -2485,17 +2485,23 @@ export class OracleQueryRunner extends BaseQueryRunner implements QueryRunner {
 
                 if (parts.length >= 3) {
                     const [, schema, name] = parts
-                    conditions.push(`("OWNER" = :${paramIndex} AND ("TABLE_NAME" = :${paramIndex + 1} OR "TABLE_NAME" = UPPER(:${paramIndex + 1})))`)
+                    conditions.push(
+                        `("OWNER" = :${paramIndex} OR "OWNER" = UPPER(:${paramIndex})) AND ("TABLE_NAME" = :${paramIndex + 1} OR "TABLE_NAME" = UPPER(:${paramIndex + 1}))`,
+                    )
                     parameters.push(schema, name)
                     paramIndex += 2
                 } else if (parts.length === 2) {
                     const [schema, name] = parts
-                    conditions.push(`("OWNER" = :${paramIndex} AND ("TABLE_NAME" = :${paramIndex + 1} OR "TABLE_NAME" = UPPER(:${paramIndex + 1})))`)
+                    conditions.push(
+                        `("OWNER" = :${paramIndex} OR "OWNER" = UPPER(:${paramIndex})) AND ("TABLE_NAME" = :${paramIndex + 1} OR "TABLE_NAME" = UPPER(:${paramIndex + 1}))`,
+                    )
                     parameters.push(schema, name)
                     paramIndex += 2
                 } else if (parts.length === 1) {
                     const [name] = parts
-                    conditions.push(`("TABLE_NAME" = :${paramIndex} OR "TABLE_NAME" = UPPER(:${paramIndex}))`)
+                    conditions.push(
+                        `("TABLE_NAME" = :${paramIndex} OR "TABLE_NAME" = UPPER(:${paramIndex}))`,
+                    )
                     parameters.push(name)
                     paramIndex += 1
                 }

@@ -1,5 +1,4 @@
 import "reflect-metadata"
-import { Post } from "./entity/Post"
 import type { DataSource } from "../../../../../src/data-source/DataSource"
 import {
     closeTestingConnections,
@@ -66,7 +65,11 @@ describe("database schema > getTable > oracle", () => {
             dataSources.map(async (dataSource) => {
                 const queryRunner = dataSource.createQueryRunner()
                 try {
-                    const tables = await queryRunner.getTables(["post", "POST", "Post"])
+                    const tables = await queryRunner.getTables([
+                        "post",
+                        "POST",
+                        "Post",
+                    ])
                     tables.length.should.be.greaterThan(0)
                 } finally {
                     await queryRunner.release()
